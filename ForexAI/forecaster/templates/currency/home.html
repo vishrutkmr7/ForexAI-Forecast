@@ -1,0 +1,19 @@
+{% extends "currency/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="post" action="/results/">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottem mb-4">Check Exchange Rate</legend>
+                {{form | crispy}}
+            </fieldset>
+            <div class="form-gorup">
+                <button class='btn btn-outline-info' type="submit">Submit</button>
+            </div>
+
+        </form>
+    </div>
+
+
+{% endblock content %}

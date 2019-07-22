@@ -1,0 +1,36 @@
+{% extends "currency/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<table>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Predicted Rate
+        </th>
+        <th>
+            Amount
+        </th>
+        <th>
+            Exchanged Amount
+        </th>
+    </tr>
+    {% for item in result %}
+    <tr>
+        <td>
+            {{item.date}}
+        </td>
+        <td>
+            {{item.predicted_value}}
+        </td>
+        <td>
+            {{item.amount}}
+        </td>
+        <td>
+            {{item.final_amount}}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}
