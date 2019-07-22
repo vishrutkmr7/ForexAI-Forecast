@@ -14,14 +14,23 @@ class UserForm(forms.Form):
             tdel = datetime.timedelta(days=2)
             start -= tdel
             end = start + tdelta
+        elif start.weekday() == 0:
+            tdel = datetime.timedelta(days=3)
+            start -= tdel
+            end = start + tdelta
+        else:
+            tdel = datetime.timedelta(days=1)
+            start -= tdel
+            end = start + tdelta
         base = 'USD'
 
         data = requests.get(f"https://api.exchangeratesapi.io/history?start_at={start}&"
                             f"end_at={end}&base={base}")
 
         data = json.loads(data.text)
+        # print(data)
         curr = list(data['rates'][str(start)].keys())
-        curr.append(base)
+        # curr.append(base)
         return curr
 
     CHOICES = list(enumerate(hitAPI()))

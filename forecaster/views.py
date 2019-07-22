@@ -15,23 +15,18 @@ from statsmodels.tsa.arima_model import ARIMA as ai
 def home(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
-        validCheck = form.is_valid()
-        if form.cleaned_data['base_Currency'] == form.cleaned_data['target_Currency']:
-            validCheck = False
+        # validCheck = form.is_valid()
+        # if form.cleaned_data['base_Currency'] == form.cleaned_data['target_Currency']:
+        #     validCheck = False
 
-        if validCheck:
+        if form.is_valid():
 
             post = dict()
             post['base_Currency'] = form.cleaned_data['base_Currency']
             post['target_Currency'] = form.cleaned_data['target_Currency']
             post['amount'] = form.cleaned_data['amount']
             post['startDate'] = form.cleaned_data['startDate']
-            if form.cleaned_data['max_waiting_time'] > 6:
-                post['max_waiting_time'] = 6
-            elif form.cleaned_data['max_waiting_time'] < 1:
-                post['max_waiting_time'] = 1
-            else:
-                post['max_waiting_time'] = form.cleaned_data['max_waiting_time']
+            post['max_waiting_time'] = form.cleaned_data['max_waiting_time']
 
                 
             result_json = predictor(post)
@@ -134,6 +129,14 @@ def hit_api():
 
     if start.weekday() == 5 or start.weekday() ==6:
         tdel = datetime.timedelta(days=2)
+        start -= tdel
+        end = start + tdelta
+    elif start.weekday() == 0:
+        tdel = datetime.timedelta(days=3)
+        start -= tdel
+        end = start + tdelta
+    else:
+        tdel = datetime.timedelta(days=1)
         start -= tdel
         end = start + tdelta
     base = 'USD'
