@@ -19,7 +19,7 @@ class dataForm(models.Model):
         ordering = ['-start_date']
 
         def __unicode__(self):
-            return u'%s'% self.title
+            return f'{self.title}'
 
     def get_absolute_url(self):
         return reverse('forecaster.views.home', args=[self.slug])

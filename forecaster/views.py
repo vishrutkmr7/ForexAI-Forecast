@@ -21,14 +21,14 @@ def home(request):
 
         if form.is_valid():
 
-            post = dict()
-            post['base_Currency'] = form.cleaned_data['base_Currency']
-            post['target_Currency'] = form.cleaned_data['target_Currency']
-            post['amount'] = form.cleaned_data['amount']
-            post['startDate'] = form.cleaned_data['startDate']
-            post['max_waiting_time'] = form.cleaned_data['max_waiting_time']
+            post = {
+                'base_Currency': form.cleaned_data['base_Currency'],
+                'target_Currency': form.cleaned_data['target_Currency'],
+                'amount': form.cleaned_data['amount'],
+                'startDate': form.cleaned_data['startDate'],
+                'max_waiting_time': form.cleaned_data['max_waiting_time'],
+            }
 
-                
             result_json = predictor(post)
             print(result_json)
 
@@ -118,8 +118,7 @@ def predictor(post):
 # Function that calls ARIMA model to fit and forecast the data
 def start_arima_forecasting(actual, p, d, q):
     model = ai(actual, order=(p, d, q))
-    model_fit = model.fit(disp=0)
-    return model_fit
+    return model.fit(disp=0)
 
 
 def hit_api():
@@ -127,18 +126,14 @@ def hit_api():
     tdelta = datetime.timedelta(days=1)
     end = start+tdelta
 
-    if start.weekday() == 5 or start.weekday() ==6:
+    if start.weekday() in [5, 6]:
         tdel = datetime.timedelta(days=2)
-        start -= tdel
-        end = start + tdelta
     elif start.weekday() == 0:
         tdel = datetime.timedelta(days=3)
-        start -= tdel
-        end = start + tdelta
     else:
         tdel = datetime.timedelta(days=1)
-        start -= tdel
-        end = start + tdelta
+    start -= tdel
+    end = start + tdelta
     base = 'USD'
 
     data = requests.get(f"https://api.exchangeratesapi.io/history?start_at={start}&"
@@ -175,15 +170,17 @@ def updateResult(index, result, days, time, last_value, amount):
         result.insert(index+1, result[index])
         result.insert(index+2, result[index])
 
-    resultdict = list()
+    resultdict = []
     for i in range(time):
-        print(str(days[i]))
+        print(days[i])
         print(result[i])
-        temp = dict()
-        temp['date'] = str(days[i])
-        temp['predicted_value'] = str(result[i])
-        temp['amount'] = amount
-        temp['final_amount'] = result[i] * amount
+        temp = {
+            'date': str(days[i]),
+            'predicted_value': str(result[i]),
+            'amount': amount,
+            'final_amount': result[i] * amount,
+        }
+
         resultdict.append(temp)
 
 
